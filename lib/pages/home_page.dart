@@ -230,31 +230,37 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<H
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _actionButton(
-                      icon: Icons.play_arrow,
-                      label: "全部开始",
-                      onPressed: () async {
-                        await uploadManager.addBatchUploads(uploadPathList, uploadFileNameList);
-                        _handleBatchUploadCompletion(uploadPathList, uploadFileNameList);
-                        setState(() {});
-                      }),
-                  _actionButton(
-                      icon: Icons.cancel,
-                      label: "全部取消",
-                      onPressed: () async {
-                        await uploadManager.cancelBatchUploads(uploadPathList, uploadFileNameList);
-                      }),
-                  _actionButton(
-                      icon: Icons.delete_sweep,
-                      label: "全部清空",
-                      onPressed: () async {
-                        await clearAllList();
-                        setState(() {});
-                      }),
+                  Flexible(
+                    child: _actionButton(
+                        icon: Icons.play_arrow,
+                        label: "开始",
+                        onPressed: () async {
+                          await uploadManager.addBatchUploads(uploadPathList, uploadFileNameList);
+                          _handleBatchUploadCompletion(uploadPathList, uploadFileNameList);
+                          setState(() {});
+                        }),
+                  ),
+                  Flexible(
+                    child: _actionButton(
+                        icon: Icons.cancel,
+                        label: "取消",
+                        onPressed: () async {
+                          await uploadManager.cancelBatchUploads(uploadPathList, uploadFileNameList);
+                        }),
+                  ),
+                  Flexible(
+                    child: _actionButton(
+                        icon: Icons.delete_sweep,
+                        label: "清空",
+                        onPressed: () async {
+                          await clearAllList();
+                          setState(() {});
+                        }),
+                  ),
                 ],
               ),
             ),

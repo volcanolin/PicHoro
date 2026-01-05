@@ -378,9 +378,9 @@ renamePictureWithCustomFormat(File file) async {
   String milliSecond = now.millisecond.toString().padLeft(3, '0');
   String timestampMilliSecond = (now.millisecondsSinceEpoch).floor().toString();
 
-  String uuidWithoutDash = const Uuid().v4().replaceAll('-', '');
-  String randommd5 = md5.convert(utf8.encode(uuidWithoutDash)).toString();
-  String randommd5Short = randommd5.substring(0, 16);
+  var fileBytes = await file.readAsBytes();
+  String fileMd5 = md5.convert(fileBytes).toString();
+  String fileMd5Short = fileMd5.substring(0, 16);
 
   String oldFileName = my_path.basename(path).replaceAll(fileExtension, '');
   String newFileName = customFormat
@@ -393,9 +393,9 @@ renamePictureWithCustomFormat(File file) async {
       .replaceAll('{s}', second)
       .replaceAll('{ms}', milliSecond)
       .replaceAll('{timestamp}', timestampMilliSecond)
-      .replaceAll('{uuid}', uuidWithoutDash)
-      .replaceAll('{md5}', randommd5)
-      .replaceAll('{md5-16}', randommd5Short)
+      .replaceAll('{uuid}', const Uuid().v4().replaceAll('-', ''))
+      .replaceAll('{md5}', fileMd5)
+      .replaceAll('{md5-16}', fileMd5Short)
       .replaceAllMapped(RegExp(r'\{str-(\d+)\}'), (match) => randomStringGenerator(int.parse(match.group(1) ?? '0')))
       .replaceAll('{filename}', oldFileName);
   newFileName = newFileName + fileExtension;
