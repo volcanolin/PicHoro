@@ -27,9 +27,9 @@ class WebdavManageAPI extends BaseManageApi {
       password: configMap['password'],
     )
       ..setHeaders({'accept-charset': 'utf-8'})
-      ..setConnectTimeout(8000)
-      ..setSendTimeout(8000)
-      ..setReceiveTimeout(8000);
+      ..setConnectTimeout(300000)
+      ..setSendTimeout(300000)
+      ..setReceiveTimeout(300000);
   }
 
   getFileList(String path) async {

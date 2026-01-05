@@ -3,7 +3,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluro/fluro.dart';
@@ -44,22 +44,20 @@ class AllPShost extends StatefulWidget {
 class AllPShostState extends State<AllPShost> {
   Future<void> _scan() async {
     try {
-      final result = await BarcodeScanner.scan(
-          options: const ScanOptions(
-        strings: {"cancel": "取消", "flash_on": "打开闪光灯", "flash_off": "关闭闪光灯"},
-        restrictFormat: [BarcodeFormat.qr],
-        android: AndroidOptions(aspectTolerance: 0.00, useAutoFocus: true),
-        autoEnableFlash: false,
-      ));
-      setState(() => Global.qrScanResult = result.rawContent.toString());
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const QRScannerPage(),
+        ),
+      );
+
+      if (result != null) {
+        setState(() => Global.qrScanResult = result);
+      }
     } catch (e) {
       _logError('_scan', {}, e);
       setState(() {
-        Global.qrScanResult = ScanResult(
-          type: ResultType.Error,
-          format: BarcodeFormat.unknown,
-          rawContent: e.toString(),
-        ).rawContent;
+        Global.qrScanResult = e.toString();
       });
     }
   }
@@ -347,6 +345,222 @@ class AllPShostState extends State<AllPShost> {
           child: const Icon(Icons.outbox_outlined, color: Colors.white, size: 30),
         ),
       ),
+    );
+  }
+}
+
+class QRScannerPage extends StatefulWidget {
+  const QRScannerPage({super.key});
+
+  @override
+  QRScannerPageState createState() => QRScannerPageState();
+}
+
+class QRScannerPageState extends State<QRScannerPage> {
+  MobileScannerController cameraController = MobileScannerController(
+    formats: [BarcodeFormat.qrCode],
+    autoStart: true,
+  );
+  bool _hasDetected = false;
+
+  @override
+  void dispose() {
+    cameraController.dispose();
+    super.dispose();
+  }
+
+  void _onDetect(BarcodeCapture capture) {
+    if (_hasDetected) return;
+
+    final List<Barcode> barcodes = capture.barcodes;
+    if (barcodes.isNotEmpty && barcodes.first.rawValue != null) {
+      _hasDetected = true;
+      Navigator.pop(context, barcodes.first.rawValue!);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: const Text('二维码扫描'),
+        centerTitle: true,
+        actions: [
+          ValueListenableBuilder(
+            valueListenable: cameraController,
+            builder: (context, state, child) {
+              return IconButton(
+                icon: Icon(
+                  cameraController.torchEnabled ? Icons.flash_on : Icons.flash_off,
+                ),
+                iconSize: 32.0,
+                onPressed: () => cameraController.toggleTorch(),
+              );
+            },
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          MobileScanner(
+            controller: cameraController,
+            onDetect: _onDetect,
+          ),
+          // Overlay with scanning area
+          Container(
+            decoration: ShapeDecoration(
+              shape: QrScannerOverlayShape(
+                borderColor: Theme.of(context).primaryColor,
+                borderRadius: 10,
+                borderLength: 30,
+                borderWidth: 8,
+                cutOutSize: 250,
+              ),
+            ),
+          ),
+          // Instructions
+          const Positioned(
+            bottom: 100,
+            left: 0,
+            right: 0,
+            child: Text(
+              '请将二维码放入扫描框内',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class QrScannerOverlayShape extends ShapeBorder {
+  const QrScannerOverlayShape({
+    this.borderColor = Colors.red,
+    this.borderWidth = 3.0,
+    this.overlayColor = const Color.fromRGBO(0, 0, 0, 80),
+    this.borderRadius = 0,
+    this.borderLength = 40,
+    double? cutOutSize,
+    double? cutOutHeight,
+    double? cutOutWidth,
+  })  : cutOutWidth = cutOutWidth ?? cutOutSize ?? 250,
+        cutOutHeight = cutOutHeight ?? cutOutSize ?? 250;
+
+  final Color borderColor;
+  final double borderWidth;
+  final Color overlayColor;
+  final double borderRadius;
+  final double borderLength;
+  final double cutOutWidth;
+  final double cutOutHeight;
+
+  @override
+  EdgeInsetsGeometry get dimensions => const EdgeInsets.all(10);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
+    return Path()
+      ..fillType = PathFillType.evenOdd
+      ..addPath(getOuterPath(rect), Offset.zero);
+  }
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    Path getLeftTopPath(Rect rect) {
+      return Path()
+        ..moveTo(rect.left, rect.bottom)
+        ..lineTo(rect.left, rect.top + borderRadius)
+        ..quadraticBezierTo(rect.left, rect.top, rect.left + borderRadius, rect.top)
+        ..lineTo(rect.right, rect.top);
+    }
+
+    return getLeftTopPath(rect)
+      ..lineTo(rect.right, rect.bottom)
+      ..lineTo(rect.left, rect.bottom)
+      ..lineTo(rect.left, rect.top);
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    final width = rect.width;
+    final borderWidthSize = width / 2;
+    final height = rect.height;
+    final borderHeightSize = height / 2;
+    final cutOutWidth = this.cutOutWidth < width ? this.cutOutWidth : width - borderWidth;
+    final cutOutHeight = this.cutOutHeight < height ? this.cutOutHeight : height - borderWidth;
+
+    final backgroundPaint = Paint()
+      ..color = overlayColor
+      ..style = PaintingStyle.fill;
+
+    final boxPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    final cutOutRect = Rect.fromLTWH(
+      borderWidthSize - cutOutWidth / 2,
+      borderHeightSize - cutOutHeight / 2,
+      cutOutWidth,
+      cutOutHeight,
+    );
+
+    canvas
+      ..saveLayer(
+        rect,
+        backgroundPaint,
+      )
+      ..drawRect(rect, backgroundPaint)
+      ..drawRRect(
+        RRect.fromRectAndCorners(
+          cutOutRect,
+          topLeft: Radius.circular(borderRadius),
+          topRight: Radius.circular(borderRadius),
+          bottomLeft: Radius.circular(borderRadius),
+          bottomRight: Radius.circular(borderRadius),
+        ),
+        backgroundPaint..blendMode = BlendMode.clear,
+      )
+      ..restore();
+
+    final borderPath = Path();
+
+    borderPath
+      ..moveTo(cutOutRect.left - borderWidth / 2, cutOutRect.top + borderLength)
+      ..lineTo(cutOutRect.left - borderWidth / 2, cutOutRect.top)
+      ..lineTo(cutOutRect.left + borderLength, cutOutRect.top);
+
+    borderPath
+      ..moveTo(cutOutRect.right - borderLength, cutOutRect.top)
+      ..lineTo(cutOutRect.right + borderWidth / 2, cutOutRect.top)
+      ..lineTo(cutOutRect.right + borderWidth / 2, cutOutRect.top + borderLength);
+
+    borderPath
+      ..moveTo(cutOutRect.right + borderWidth / 2, cutOutRect.bottom - borderLength)
+      ..lineTo(cutOutRect.right + borderWidth / 2, cutOutRect.bottom)
+      ..lineTo(cutOutRect.right - borderLength, cutOutRect.bottom);
+
+    borderPath
+      ..moveTo(cutOutRect.left + borderLength, cutOutRect.bottom)
+      ..lineTo(cutOutRect.left - borderWidth / 2, cutOutRect.bottom)
+      ..lineTo(cutOutRect.left - borderWidth / 2, cutOutRect.bottom - borderLength);
+
+    canvas.drawPath(borderPath, boxPaint);
+  }
+
+  @override
+  ShapeBorder scale(double t) {
+    return QrScannerOverlayShape(
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      overlayColor: overlayColor,
     );
   }
 }

@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
 import 'package:horopic/widgets/common_widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:r_upgrade/r_upgrade.dart';
+import 'package:ota_update/ota_update.dart';
 import 'package:fluro/fluro.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +27,14 @@ class ConfigurePageState extends State<ConfigurePage> with AutomaticKeepAliveCli
   bool _isLoading = false;
   bool _updateAvailable = false;
   DateTime? _lastVersionCheck;
+  StreamSubscription<OtaEvent>? _updateSubscription;
   static const versionCheckInterval = Duration(minutes: 10);
+
+  @override
+  void dispose() {
+    _updateSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   bool get wantKeepAlive => false;
@@ -121,12 +130,40 @@ class ConfigurePageState extends State<ConfigurePage> with AutomaticKeepAliveCli
         content: '发现新版本$latestVersion,当前版本$version,是否更新?',
         context: context,
         onConfirm: () async {
+          // Cancel any existing update subscription
+          _updateSubscription?.cancel();
+
           String url = 'https://pichoro.msq.pub/PicHoro_V$latestVersion.apk';
-          RUpgrade.upgrade(url,
-              fileName: 'PicHoro_V$latestVersion.apk',
-              installType: RUpgradeInstallType.normal,
-              notificationStyle: NotificationStyle.speechAndPlanTime);
-          setState(() {});
+          try {
+            _updateSubscription = OtaUpdate()
+                .execute(
+              url,
+              destinationFilename: 'PicHoro_V$latestVersion.apk',
+            )
+                .listen(
+              (OtaEvent event) {
+                if (event.status == OtaStatus.DOWNLOADING) {
+                  showToast('下载进度: ${event.value}%');
+                } else if (event.status == OtaStatus.INSTALLING) {
+                  showToast('正在安装更新...');
+                } else if (event.status == OtaStatus.DOWNLOAD_ERROR) {
+                  showToast('下载失败');
+                } else if (event.status == OtaStatus.PERMISSION_NOT_GRANTED_ERROR) {
+                  showToast('权限被拒绝，无法安装更新');
+                } else if (event.status == OtaStatus.ALREADY_RUNNING_ERROR) {
+                  showToast('更新正在进行中');
+                }
+              },
+              onError: (error) {
+                showToast('更新失败: $error');
+              },
+              onDone: () {
+                _updateSubscription = null;
+              },
+            );
+          } catch (e) {
+            showToast('更新失败: $e');
+          }
         },
       );
     } else {
