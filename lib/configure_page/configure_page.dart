@@ -297,13 +297,6 @@ class ConfigurePageState extends State<ConfigurePage> with AutomaticKeepAliveCli
             title: '应用信息',
             children: [
               _buildSettingItem(
-                title: '交流群',
-                icon: Icons.people,
-                onTap: () => Application.router
-                    .navigateTo(context, Routes.authorInformation, transition: TransitionType.cupertino),
-              ),
-              const Divider(height: 1, indent: 56),
-              _buildSettingItem(
                 title: '软件日志',
                 icon: Icons.description,
                 onTap: () => Application.router

@@ -49,7 +49,6 @@ class Routes {
   static String linkFormatSelect = "/linkFormatSelect";
   static String changeTheme = "/changeTheme";
   static String emptyDatabase = "/emptyDatabase";
-  static String authorInformation = "/authorInformation";
   static String updateLog = "/updateLog";
   static String tencentBucketInformation = "/tencentBucketInformation";
   static String tencentNewBucketConfig = "/tencentNewBucketConfig";
@@ -156,7 +155,6 @@ class Routes {
     router.define(linkFormatSelect, handler: linkFormatSelectHandler);
     router.define(changeTheme, handler: changeThemeHandler);
     router.define(emptyDatabase, handler: emptyDatabaseHandler);
-    router.define(authorInformation, handler: authorInformationHandler);
     router.define(updateLog, handler: updateLogHandler);
     router.define(tencentBucketInformation, handler: tencentBucketInformationHandler);
     router.define(tencentNewBucketConfig, handler: newTencentBucketHandler);

@@ -20,7 +20,6 @@ import 'package:horopic/configure_page/common_configure/select_default_picture_h
 import 'package:horopic/configure_page/common_configure/rename_uploaded_file.dart';
 import 'package:horopic/configure_page/common_configure/compress_configure.dart';
 import 'package:horopic/configure_page/others/update_log.dart';
-import 'package:horopic/configure_page/others/author.dart';
 import 'package:horopic/configure_page/others/select_theme.dart';
 
 import 'package:horopic/picture_host_configure/configure_page/configure_export.dart';
@@ -401,11 +400,6 @@ var changeThemeHandler = Handler(handlerFunc: (BuildContext? context, Map<String
 //清空数据库页面
 var emptyDatabaseHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   return const EmptyDatabase();
-});
-
-//作者页面
-var authorInformationHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-  return const AuthorInformation();
 });
 
 //更新日志页面
