@@ -53,6 +53,12 @@ app.*.map.json
 **/android/key.properties
 *.jks
 
+# Local / ephemeral build noise (do not commit)
+ios/Flutter/ephemeral/
+build.log
+*.apk
+*.aab
+
 # 针对flutter当做module集成进现有项目时，.android目录下的文件
 **/.android/**/gradle-wrapper.jar
 **/.android/.gradle

@@ -1,5 +1,5 @@
 allprojects {
-        gradle.projectsEvaluated {
+    gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
@@ -9,11 +9,8 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
-        //maven { url 'https://maven.aliyun.com/repository/google' }
-       //maven { url 'https://maven.aliyun.com/repository/jcenter' }
-      // maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
     }
-    
+
     subprojects {
         afterEvaluate { project ->
             if (project.hasProperty('android')) {
@@ -21,22 +18,30 @@ allprojects {
                     if (namespace == null) {
                         namespace project.group
                     }
+                    // Force modern compileSdk for all plugins (fixes android:attr/lStar etc.)
+                    try {
+                        compileSdkVersion 36
+                    } catch (Throwable ignored) {
+                    }
                 }
             }
-            if (project.plugins.hasPlugin("com.android.application") || project.plugins.hasPlugin("com.android.library")) {
-            tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach { kotlinTask ->
-                def sourceCompatibility = project.android.compileOptions.sourceCompatibility?.toString() ?: "1.8"
-                def jvmTarget = kotlinTask.kotlinOptions.jvmTarget ?: ""
-                if (sourceCompatibility != jvmTarget) {
-                    kotlinTask.kotlinOptions.jvmTarget = sourceCompatibility
-                    println "INFO: Updated jvmTarget for ${project.name} to ${sourceCompatibility}"
+            if (project.plugins.hasPlugin("com.android.application") ||
+                    project.plugins.hasPlugin("com.android.library")) {
+                project.android {
+                    try {
+                        compileOptions {
+                            sourceCompatibility JavaVersion.VERSION_17
+                            targetCompatibility JavaVersion.VERSION_17
+                        }
+                    } catch (Throwable ignored) {}
+                }
+                tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach { kotlinTask ->
+                    kotlinTask.kotlinOptions.jvmTarget = "17"
+                    println "INFO: Forced jvmTarget=17 for ${project.name}"
                 }
             }
-        }
         }
     }
-    // 修复由于高版本导致namespace检测为空的问题，没遇到可不添加
-
 }
 
 rootProject.buildDir = '../build'

@@ -1,0 +1,42 @@
+group 'sk.fourq.otaupdate'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'sk.fourq.otaupdate'
+    compileSdkVersion 36
+
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.14'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+}

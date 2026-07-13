@@ -22,14 +22,20 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+// Official keystore is not in the public repo.
+// For verification builds we fall back to the Android debug keystore
+// so a release-mode APK (Impeller disabled) can still be produced.
 def keystorePropertiesFile = rootProject.file("key.properties")
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def hasReleaseKeystore = keystorePropertiesFile.exists()
+if (hasReleaseKeystore) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 android {
     //compileSdkVersion flutter.compileSdkVersion
     namespace "com.example.horopic"
-    compileSdkVersion 35
+    compileSdkVersion 36
     //ndkVersion flutter.ndkVersion
     ndkVersion "27.0.12077973"
 
@@ -55,19 +61,26 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        // Xiaomi 15 / modern phones are arm64-only for our test package
+        ndk {
+            abiFilters "arm64-v8a"
+        }
     }
 
     signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+            if (hasReleaseKeystore) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
         }
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            // Use official keystore when present; otherwise debug keystore.
+            signingConfig hasReleaseKeystore ? signingConfigs.release : signingConfigs.debug
 
             minifyEnabled false
             shrinkResources false
