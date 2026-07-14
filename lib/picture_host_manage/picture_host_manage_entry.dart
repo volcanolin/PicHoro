@@ -78,7 +78,7 @@ class PsHostHomePageState extends State<PsHostHomePage> with AutomaticKeepAliveC
       ),
       DraggableGridItem(
         child: _buildCard(
-          'assets/icons/tcyun.png',
+          'assets/icons/cfimgbed.png',
           'CF ImgBed',
           () {
             Application.router.navigateTo(
