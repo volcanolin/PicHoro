@@ -423,6 +423,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<H
     };
     switch (Global.defaultPShost) {
       case 'sm.ms':
+      case 'cfimgbed':
         //["success", formatedURL, returnUrl, pictureKey]
         maps['hostSpecificArgA'] = 'test';
         maps['hostSpecificArgB'] = 'test';
@@ -497,7 +498,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<H
       if (Global.defaultPShost == 'ftp' ||
           Global.defaultPShost == 'aws' ||
           Global.defaultPShost == 'alist' ||
-          Global.defaultPShost == 'webdav') {
+          Global.defaultPShost == 'webdav' ||
+          Global.defaultPShost == 'cfimgbed') {
         await AlbumSQL.insertData(Global.imageDBExtend!, hostToTableNameMap[Global.defaultPShost]!, maps);
       } else {
         await AlbumSQL.insertData(Global.imageDB!, hostToTableNameMap[Global.defaultPShost]!, maps);
@@ -560,7 +562,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<H
         if (Global.defaultPShost == 'ftp' ||
             Global.defaultPShost == 'aws' ||
             Global.defaultPShost == 'alist' ||
-            Global.defaultPShost == 'webdav') {
+            Global.defaultPShost == 'webdav' ||
+            Global.defaultPShost == 'cfimgbed') {
           await AlbumSQL.insertData(Global.imageDBExtend!, hostToTableNameMap[Global.defaultPShost]!, maps);
         } else {
           await AlbumSQL.insertData(Global.imageDB!, hostToTableNameMap[Global.defaultPShost]!, maps);
@@ -726,6 +729,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<H
       {'id': 'upyun', 'icon': 0x0055, 'label': '又拍'},
       {'id': 'tencent', 'icon': 0x0054, 'label': '腾讯'},
       {'id': 'sm.ms', 'icon': 0x0053, 'label': 'SM.MS'},
+      {'id': 'cfimgbed', 'icon': 0x0043, 'label': 'CF ImgBed'},
       {'id': 'qiniu', 'icon': 0x0051, 'label': '七牛'},
       {'id': 'lsky.pro', 'icon': 0x004C, 'label': '兰空'},
       {'id': 'imgur', 'icon': 0x0049, 'label': 'Imgur'},

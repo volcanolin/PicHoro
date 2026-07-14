@@ -15,6 +15,7 @@ class ConfigureTemplate {
     'imgur': imgurConfigureTemplate,
     'alist': alistConfigureTemplate,
     'webdav': webdavConfigureTemplate,
+    'cfimgbed': cfimgbedConfigureTemplate,
   };
 
   static List alistConfigureTemplateKeys = AlistConfigModel.keysList;
@@ -29,6 +30,7 @@ class ConfigureTemplate {
   static List tencentConfigureTemplateKeys = TencentConfigModel.keysList;
   static List upyunConfigureTemplateKeys = UpyunConfigModel.keysList;
   static List webdavConfigureTemplateKeys = WebdavConfigModel.keysList;
+  static List cfimgbedConfigureTemplateKeys = CfimgbedConfigModel.keysList;
 
   static final Map<String, String> alistConfigureTemplate = {for (var k in alistConfigureTemplateKeys) k: placeholder};
 
@@ -62,5 +64,9 @@ class ConfigureTemplate {
 
   static final Map<String, String> webdavConfigureTemplate = {
     for (var k in webdavConfigureTemplateKeys) k: placeholder
+  };
+
+  static final Map<String, String> cfimgbedConfigureTemplate = {
+    for (var k in cfimgbedConfigureTemplateKeys) k: placeholder
   };
 }

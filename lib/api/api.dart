@@ -10,3 +10,4 @@ export 'smms_api.dart';
 export 'tencent_api.dart';
 export 'upyun_api.dart';
 export 'webdav_api.dart';
+export 'cfimgbed_api.dart';

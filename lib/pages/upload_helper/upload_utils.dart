@@ -226,6 +226,36 @@ class UploadManager {
           await AlbumSQL.insertData(Global.imageDB!, hostToTableNameMap[Global.defaultPShost]!, maps);
           task.formattedUrl = formatedURL;
           setStatus(task, UploadStatus.completed);
+        case 'cfimgbed':
+          List<String> cfUploadResult = await CfimgbedImageUploadUtils.uploadApi(
+              path: path,
+              name: fileName,
+              configMap: configMap,
+              onSendProgress: createCallback(path, fileName),
+              cancelToken: canceltoken);
+
+          if (cfUploadResult[0] != 'success') {
+            throw Exception('上传失败');
+          }
+          eventBus.fire(AlbumRefreshEvent(albumKeepAlive: false));
+          var [_, formatedURL, returnUrl, pictureKey] = cfUploadResult;
+
+          Map<String, dynamic> maps = {
+            'path': path,
+            'name': fileName,
+            'url': returnUrl,
+            'PBhost': Global.defaultPShost,
+            'pictureKey': pictureKey,
+            'hostSpecificArgA': 'test',
+            'hostSpecificArgB': 'test',
+            'hostSpecificArgC': 'test',
+            'hostSpecificArgD': 'test',
+            'hostSpecificArgE': 'test',
+          };
+          // cfimgbed album table lives in extended DB
+          await AlbumSQL.insertData(Global.imageDBExtend!, hostToTableNameMap[Global.defaultPShost]!, maps);
+          task.formattedUrl = formatedURL;
+          setStatus(task, UploadStatus.completed);
         case 'github':
           maxConcurrentTasks = 1;
           var githubUploadResult = await GithubImageUploadUtils.uploadApi(

@@ -10,3 +10,4 @@ export 'upyun_configure.dart';
 export 'lskypro_configure.dart';
 export 'alist_configure.dart';
 export 'webdav_configure.dart';
+export 'cfimgbed_configure.dart';

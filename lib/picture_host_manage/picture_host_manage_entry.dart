@@ -78,6 +78,20 @@ class PsHostHomePageState extends State<PsHostHomePage> with AutomaticKeepAliveC
       ),
       DraggableGridItem(
         child: _buildCard(
+          'assets/icons/tcyun.png',
+          'CF ImgBed',
+          () {
+            Application.router.navigateTo(
+              context,
+              Routes.cfimgbedFileExplorer,
+              transition: TransitionType.inFromRight,
+            );
+          },
+        ),
+        isDraggable: true,
+      ),
+      DraggableGridItem(
+        child: _buildCard(
           'assets/icons/aliyun.png',
           '阿里云',
           () {

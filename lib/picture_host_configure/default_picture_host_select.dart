@@ -31,6 +31,7 @@ class DefaultPShostSelectState extends State<DefaultPShostSelect> {
     'aws',
     'alist',
     'webdav',
+    'cfimgbed',
   ];
 
   Widget _buildSettingCard({required String title, required List<Widget> children}) {
@@ -189,6 +190,12 @@ class DefaultPShostSelectState extends State<DefaultPShostSelect> {
                 id: 'webdav',
                 icon: Icons.web,
               ),
+              const Divider(height: 1, indent: 56),
+              _buildHostItem(
+                title: 'CloudFlare ImgBed',
+                id: 'cfimgbed',
+                icon: Icons.cloud_done_outlined,
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -215,6 +222,7 @@ setdefaultPShostRemoteAndLocal(String psHost) async {
       'aws': 'PBhostExtend2',
       'alist': 'PBhostExtend3',
       'webdav': 'PBhostExtend4',
+      'cfimgbed': 'cfimgbed',
     };
 
     if (hostMapping.containsKey(psHost)) {

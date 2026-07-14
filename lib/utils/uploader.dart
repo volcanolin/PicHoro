@@ -19,6 +19,7 @@ Map<String, Function> uploadFunc = {
   'aws': AwsImageUploadUtils.uploadApi,
   'alist': AlistImageUploadUtils.uploadApi,
   'webdav': WebdavImageUploadUtils.uploadApi,
+  'cfimgbed': CfimgbedImageUploadUtils.uploadApi,
 };
 
 ///获取图床配置文件

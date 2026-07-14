@@ -31,6 +31,7 @@ class Routes {
   static String awsPShostSelect = "/awsPShostSelect";
   static String alistPShostSelect = "/alistPShostSelect";
   static String webdavPShostSelect = "/webdavPShostSelect";
+  static String cfimgbedPShostSelect = "/cfimgbedPShostSelect";
   static String configureStorePage = "/configureStorePage";
   static String alistConfigureStoreEditPage = "/alistConfigureStoreEditPage";
   static String aliyunConfigureStoreEditPage = "/aliyunConfigureStoreEditPage";
@@ -106,6 +107,7 @@ class Routes {
   static String pdfViewer = "/pdfViewer";
   static String webdavFileExplorer = "/webdavFileExplorer";
   static String webdavFileInformation = "/webdavFileInformation";
+  static String cfimgbedFileExplorer = "/cfimgbedFileExplorer";
   static String baseUpDownloadManagePage = "/baseUpDownloadManagePage";
 
   static void configureRoutes(FluroRouter router) {
@@ -138,6 +140,7 @@ class Routes {
     router.define(awsPShostSelect, handler: awsPShostSelectHandler);
     router.define(alistPShostSelect, handler: alistPShostSelectHandler);
     router.define(webdavPShostSelect, handler: webdavPShostSelectHandler);
+    router.define(cfimgbedPShostSelect, handler: cfimgbedPShostSelectHandler);
     router.define(alistConfigureStoreEditPage, handler: alistConfigureStoreEditPageHandler);
     router.define(aliyunConfigureStoreEditPage, handler: aliyunConfigureStoreEditPageHandler);
     router.define(awsConfigureStoreEditPage, handler: awsConfigureStoreEditPageHandler);
@@ -212,6 +215,7 @@ class Routes {
     router.define(pdfViewer, handler: pdfViewerHandler);
     router.define(webdavFileExplorer, handler: webdavFileExplorerHandler);
     router.define(webdavFileInformation, handler: webdavFileInformationHandler);
+    router.define(cfimgbedFileExplorer, handler: cfimgbedFileExplorerHandler);
     router.define(baseUpDownloadManagePage, handler: baseDownloadFileHandler);
   }
 }

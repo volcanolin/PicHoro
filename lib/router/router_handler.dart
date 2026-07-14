@@ -41,6 +41,7 @@ import 'package:horopic/picture_host_manage/common/base_up_down_load_manage_page
 import 'package:horopic/picture_host_manage/smms/smms_manage_home_page.dart';
 import 'package:horopic/picture_host_manage/smms/smms_file_explorer.dart';
 import 'package:horopic/picture_host_manage/smms/smms_file_information_page.dart';
+import 'package:horopic/picture_host_manage/cfimgbed/cfimgbed_file_explorer.dart';
 
 import 'package:horopic/picture_host_manage/aliyun/aliyun_bucket_list_page.dart';
 import 'package:horopic/picture_host_manage/aliyun/aliyun_new_bucket_configure.dart';
@@ -838,4 +839,11 @@ var baseDownloadFileHandler = Handler(handlerFunc: (BuildContext? context, Map<S
     tabIndex: tabIndex,
     currentListIndex: currentListIndex,
   );
+});
+var cfimgbedPShostSelectHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return const CfimgbedConfig();
+});
+
+var cfimgbedFileExplorerHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return const CfimgbedFileExplorer();
 });

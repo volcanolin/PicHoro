@@ -20,6 +20,7 @@ Map<String, Function> deleteFunc = {
   'PBhostExtend2': AwsImageUploadUtils.deleteApi, //AWS
   'PBhostExtend3': AlistImageUploadUtils.deleteApi, //Alist
   'PBhostExtend4': WebdavImageUploadUtils.deleteApi, //Webdav
+  'cfimgbed': CfimgbedImageUploadUtils.deleteApi,
 };
 
 //获取图床配置文件

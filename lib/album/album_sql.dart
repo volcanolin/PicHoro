@@ -38,6 +38,7 @@ Map<String, String> hostToTableNameMap = {
   'aws': 'PBhostExtend2',
   'alist': 'PBhostExtend3',
   'webdav': 'PBhostExtend4',
+  'cfimgbed': 'PBhostExtend5',
 };
 
 List<String> tableKeysList = [

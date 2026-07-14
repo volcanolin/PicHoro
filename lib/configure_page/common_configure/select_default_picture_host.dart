@@ -267,6 +267,7 @@ class AllPShostState extends State<AllPShost> {
       {'title': '腾讯云COS V5', 'icon': Icons.cloud_queue, 'route': Routes.tencentPShostSelect},
       {'title': '又拍云存储', 'icon': Icons.cloud_done, 'route': Routes.upyunPShostSelect},
       {'title': 'WebDAV', 'icon': Icons.web, 'route': Routes.webdavPShostSelect},
+      {'title': 'CloudFlare ImgBed', 'icon': Icons.cloud_done_outlined, 'route': Routes.cfimgbedPShostSelect},
     ];
 
     return Scaffold(

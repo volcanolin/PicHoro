@@ -36,6 +36,7 @@ Map<String, String> psNameTranslate = {
   'lsky.pro': '兰空图床',
   'alist': 'AList V3',
   'webdav': 'WebDAV',
+  'cfimgbed': 'CloudFlare ImgBed',
 };
 
 Map downloadStatus = {

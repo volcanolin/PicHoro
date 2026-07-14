@@ -81,6 +81,7 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
     'PBhostExtend2': 'S3',
     'PBhostExtend3': 'Alist',
     'PBhostExtend4': 'WebDAV',
+    'cfimgbed': 'CF ImgBed',
   };
 
   List<Map<String, String>> switchPBOptions = [
@@ -96,6 +97,7 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
     {'text': '腾讯云', 'host': 'tencent'},
     {'text': '又拍云', 'host': 'upyun'},
     {'text': 'WebDAV', 'host': 'PBhostExtend4'},
+    {'text': 'CloudFlare ImgBed', 'host': 'cfimgbed'},
   ];
 
   List<String> pasteFormatsList = [
@@ -657,8 +659,11 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
         }
       } else if (Global.defaultShowedPBhost == 'PBhostExtend2' ||
           Global.defaultShowedPBhost == 'PBhostExtend3' ||
-          Global.defaultShowedPBhost == 'PBhostExtend4') {
-        await AlbumSQL.deleteData(Global.imageDBExtend!, Global.defaultShowedPBhost, imageIdList[index]);
+          Global.defaultShowedPBhost == 'PBhostExtend4' ||
+          Global.defaultShowedPBhost == 'PBhostExtend5' ||
+          Global.defaultShowedPBhost == 'cfimgbed') {
+        final table = Global.defaultShowedPBhost == 'cfimgbed' ? 'PBhostExtend5' : Global.defaultShowedPBhost;
+        await AlbumSQL.deleteData(Global.imageDBExtend!, table, imageIdList[index]);
       } else {
         await AlbumSQL.deleteData(Global.imageDB!, Global.defaultShowedPBhost, imageIdList[index]);
       }
@@ -787,8 +792,11 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
     if (Global.defaultShowedPBhost == 'PBhostExtend1' ||
         Global.defaultShowedPBhost == 'PBhostExtend2' ||
         Global.defaultShowedPBhost == 'PBhostExtend3' ||
-        Global.defaultShowedPBhost == 'PBhostExtend4') {
-      imageIdList = extendDbIdListExtend[Global.defaultShowedPBhost]!;
+        Global.defaultShowedPBhost == 'PBhostExtend4' ||
+        Global.defaultShowedPBhost == 'PBhostExtend5' ||
+        Global.defaultShowedPBhost == 'cfimgbed') {
+      final table = Global.defaultShowedPBhost == 'cfimgbed' ? 'PBhostExtend5' : Global.defaultShowedPBhost;
+      imageIdList = extendDbIdListExtend[table]!;
     } else {
       imageIdList = dbIdList[Global.defaultShowedPBhost]!;
     }
@@ -800,8 +808,11 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
       if (Global.defaultShowedPBhost == 'PBhostExtend1' ||
           Global.defaultShowedPBhost == 'PBhostExtend2' ||
           Global.defaultShowedPBhost == 'PBhostExtend3' ||
-          Global.defaultShowedPBhost == 'PBhostExtend4') {
-        maps = await AlbumSQL.queryData(Global.imageDBExtend!, Global.defaultShowedPBhost, imageIdList[i]);
+          Global.defaultShowedPBhost == 'PBhostExtend4' ||
+          Global.defaultShowedPBhost == 'PBhostExtend5' ||
+          Global.defaultShowedPBhost == 'cfimgbed') {
+        final table = Global.defaultShowedPBhost == 'cfimgbed' ? 'PBhostExtend5' : Global.defaultShowedPBhost;
+        maps = await AlbumSQL.queryData(Global.imageDBExtend!, table, imageIdList[i]);
       } else {
         maps = await AlbumSQL.queryData(Global.imageDB!, Global.defaultShowedPBhost, imageIdList[i]);
       }
@@ -809,6 +820,7 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
       Map<String, dynamic> map = maps[0];
       switch (Global.defaultShowedPBhost) {
         case 'smms':
+        case 'cfimgbed':
           addImageDetails(map, 'url', 'url', false, false);
         case 'lskypro':
         case 'imgur':
@@ -855,6 +867,7 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
     switch (Global.defaultShowedPBhost) {
       case 'lskypro':
       case 'smms':
+      case 'cfimgbed':
       case 'imgur':
       case 'qiniu':
       case 'tencent':
@@ -906,6 +919,7 @@ class UploadedImagesState extends State<UploadedImages> with AutomaticKeepAliveC
         Global.defaultShowedPBhost == 'qiniu' ||
         Global.defaultShowedPBhost == 'tencent' ||
         Global.defaultShowedPBhost == 'smms' ||
+        Global.defaultShowedPBhost == 'cfimgbed' ||
         Global.defaultShowedPBhost == 'lskypro' ||
         Global.defaultShowedPBhost == 'PBhostExtend2' ||
         Global.defaultShowedPBhost == 'PBhostExtend3') {
