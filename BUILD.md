@@ -60,3 +60,33 @@ Official keystore is **not** in the public repo. Options:
 
 Switching signing keys requires uninstall. That wipes local figure-bed configs under
 `app_flutter/*_config.txt`. Re-import or re-enter credentials after install.
+
+
+## PicHoro-Fix identity (this fork)
+
+| Item | Value |
+|------|--------|
+| App label | `PicHoro-Fix` |
+| applicationId | `com.volcanolin.pichoro.fix` |
+| Coexist with official | Yes (official stays `com.example.horopic`) |
+
+### Release signing (local only)
+
+Do **not** commit keystores. On the build machine:
+
+1. Put `android/key.properties` (gitignored), for example:
+
+```properties
+storePassword=***
+keyPassword=***
+keyAlias=pichoro_fix
+storeFile=/absolute/path/to/pichoro-fix.jks
+```
+
+2. Build:
+
+```bash
+flutter build apk --release --target-platform android-arm64 --no-tree-shake-icons
+```
+
+Without `key.properties`, release falls back to the debug keystore.

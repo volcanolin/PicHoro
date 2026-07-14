@@ -22,9 +22,8 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-// Official keystore is not in the public repo.
-// For verification builds we fall back to the Android debug keystore
-// so a release-mode APK (Impeller disabled) can still be produced.
+// Release keystore is local-only (android/key.properties, gitignored).
+// If missing, fall back to the Android debug keystore for CI/dev builds.
 def keystorePropertiesFile = rootProject.file("key.properties")
 def keystoreProperties = new Properties()
 def hasReleaseKeystore = keystorePropertiesFile.exists()
@@ -53,7 +52,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.horopic"
+        applicationId "com.volcanolin.pichoro.fix"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 24
@@ -79,7 +78,7 @@ android {
     }
     buildTypes {
         release {
-            // Use official keystore when present; otherwise debug keystore.
+            // Prefer local release keystore; otherwise debug keystore.
             signingConfig hasReleaseKeystore ? signingConfigs.release : signingConfigs.debug
 
             minifyEnabled false

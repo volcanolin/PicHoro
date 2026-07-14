@@ -42,7 +42,7 @@ class MyAppState extends State<MyApp> {
       child: Consumer<AppInfoProvider>(builder: (context, appInfo, child) {
         NativeFeatures.loadSystemFont();
         return MaterialApp(
-          title: 'PicHoro',
+          title: 'PicHoro-Fix',
           debugShowCheckedModeBanner: false,
           theme: themeDataMap[appInfo.keyThemeColor]!,
           initialRoute: '/',
